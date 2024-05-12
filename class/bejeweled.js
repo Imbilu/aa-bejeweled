@@ -6,6 +6,7 @@ class Bejeweled {
   constructor() {
 
     this.playerTurn = "O";
+    this.selected = null;
 
     // Initialize this
     this.grid = this.generateRandomGrid(8, 8);
@@ -16,9 +17,29 @@ class Bejeweled {
     Screen.setGridlines(false);
 
     this.cursor.setBackgroundColor();
+
+    Screen.addCommand('up', 'Up', this.cursor.up.bind(this.cursor));
+    Screen.addCommand('left', 'Left', this.cursor.left.bind(this.cursor));
+    Screen.addCommand('right', 'Right', this.cursor.right.bind(this.cursor));
+    Screen.addCommand('down', 'Down', this.cursor.down.bind(this.cursor));
+    Screen.addCommand('return', 'Select', this.selectSwap());
+
     Screen.render();
   }
 
+
+  selectSwap() {
+    let row = this.cursor.row;
+    let col = this.cursor.col;
+    if (!this.selected) {
+      this.selected = [this.grid[row], this.grid[col]];
+      this.cursor.cursorColor = 'green';
+    }
+    else {
+      this.swap(this.grid[row], this.grid[col], this.selected[0], this.selected[1]);
+      this.cursor.cursorColor = 'yellow';
+    }
+  }
 
   generateRandomGrid(rows, cols) {
     const grid = [];
